@@ -107,8 +107,12 @@ function escapeHtml(str) {
     .replaceAll("'", '&#039;');
 }
 
-app.listen(PORT, () => {
-  console.log(`API running on http://localhost:${PORT}`);
-  console.log(`env=${APP_ENV} version=${APP_VERSION}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`API running on http://localhost:${PORT}`);
+    console.log(`env=${APP_ENV} version=${APP_VERSION}`);
+  });
+}
+
+module.exports = app;
 
