@@ -2,3 +2,11 @@
 
 - Built a modular Node.js service exposing REST endpoints and a live status dashboard, surfacing runtime metadata (environment, version, uptime, hostname) to support production-oriented deployments.
 
+- Containerized a Node.js service using Docker, enabling consistent and portable runtime environments across local development and deployment.
+
+- Orchestrated local container workflows using Docker Compose, enabling repeatable multi-service environments and simplified startup for development.
+
+- Containerized a Node.js service using Docker, defining reproducible builds with a production-ready Dockerfile and optimized build context.
+
+- Deployed a containerized Node.js application to AWS EC2, configuring secure SSH access, firewall rules, and validating live health/status endpoints in a cloud environment.
+
