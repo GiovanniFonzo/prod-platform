@@ -14,3 +14,5 @@ cd api
 npm install
 npm run dev
 
+Deployed on AWS EC2 using Docker, with an Nginx reverse proxy serving traffic on port 80
+
