@@ -20,3 +20,13 @@
 
 - Improved production reliability by adding Docker Compose restart policies (`unless-stopped`) to ensure automatic service recovery following host reboots or container failures.
 
+### Phase 6: Security Hardening and Edge Protection
+
+- Hardened the Nginx edge configuration by disabling server version tokens and adding security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy) to reduce fingerprinting and improve default browser protections.
+
+- Implemented request rate limiting and connection controls at the reverse proxy layer to mitigate abuse while preserving reliable health check access.
+
+- Removed framework identification headers from the Express application (`X-Powered-By`) to minimize unnecessary exposure of implementation details.
+
+- Validated configuration changes using zero-downtime reloads and health endpoint verification to ensure production stability during security updates.
+
