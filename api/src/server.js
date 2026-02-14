@@ -2,13 +2,27 @@
 
 const express = require('express');
 const os = require('os');
+const { metricsMiddleware, metricsHandler } = require('./metrics');
+
 
 const app = express();
+
+app.disable('x-powered-by');
+// Record metrics for all endpoints except /metrics itself
+app.use((req, res, next) => {
+  if (req.path === '/metrics') return next();
+  return metricsMiddleware(req, res, next);
+});
+
+app.get('/metrics', metricsHandler);
+
+
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 const APP_ENV = process.env.APP_ENV || 'dev';
 const APP_VERSION = process.env.APP_VERSION || '0.1.0';
 const START_TIME = Date.now();
+
 
 function secondsUptime() {
   return Math.floor((Date.now() - START_TIME) / 1000);

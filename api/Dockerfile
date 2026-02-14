@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-FROM node:20-alpine
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci --omit=dev
-
-COPY . .
-
-EXPOSE 3000
-CMD ["npm", "start"]
-||||||| parent of 6a01edb (chore: track api Dockerfile)
-=======
 # 1) Use an official Node runtime as a parent image
 FROM node:20-alpine
 
@@ -32,5 +18,3 @@ EXPOSE 3000
 
 # Start the API
 CMD ["npm", "start"]
-
->>>>>>> 6a01edb (chore: track api Dockerfile)
