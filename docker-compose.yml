@@ -4,8 +4,9 @@ services:
       context: ./api
       dockerfile: Dockerfile
     image: prod-platform-api:local
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     environment:
       APP_ENV: docker-compose
       APP_VERSION: 0.1.0
