@@ -30,3 +30,13 @@
 
 - Validated configuration changes using zero-downtime reloads and health endpoint verification to ensure production stability during security updates.
 
+### Phase 6: Observability & Metrics Foundation
+
+- Integrated Prometheus-compatible metrics using prom-client, exposing a `/metrics` endpoint for production scraping and monitoring.
+
+- Implemented in-memory request instrumentation (method, route, status) and latency histograms via Express middleware to enable performance analysis and traffic visibility.
+
+- Structured metrics collection using a dedicated registry, ensuring compatibility with Prometheus and future monitoring stacks (Grafana, alerting systems).
+
+- Validated metrics in Dockerized production environment behind Nginx, maintaining HTTPS and reverse proxy integrity.
+
