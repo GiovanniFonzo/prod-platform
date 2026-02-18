@@ -34,3 +34,32 @@ SSH in using your normal method.
 ```bash
 cd ~/prod-platform
 
+---
+
+---
+
+## Phase 6.2 — Error Rate Tracking (Prometheus)
+
+### Objective
+Track reliability signals via Prometheus metrics:
+- HTTP 5xx responses
+- Process-level exceptions (uncaughtException, unhandledRejection)
+
+### Changes
+- `api/src/metrics.js`
+  - Added `http_errors_total{method,route,status}` (increments on status >= 500)
+  - Added `process_exceptions_total{type}` (uncaughtException | unhandledRejection)
+  - Exported `recordUncaughtException()` and `recordUnhandledRejection()`
+- `api/src/server.js`
+  - Wired Node process listeners to record metrics
+
+### Validate (Local)
+If running locally:
+```bash
+cd api
+npm install
+npm run dev
+curl -s http://127.0.0.1:3000/health
+curl -s http://127.0.0.1:3000/metrics | grep -n "http_errors_total" | head
+curl -s http://127.0.0.1:3000/metrics | grep -n "process_exceptions_total" | head
+
