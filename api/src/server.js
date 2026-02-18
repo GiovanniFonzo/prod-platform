@@ -2,10 +2,25 @@
 
 const express = require('express');
 const os = require('os');
-const { metricsMiddleware, metricsHandler } = require('./metrics');
+const {
+  metricsMiddleware,
+  metricsHandler,
+  recordUncaughtException,
+  recordUnhandledRejection
+} = require('./metrics');
 
+process.on('uncaughtException', (err) => {
+  recordUncaughtException();
+  console.error('uncaughtException:', err);
+});
+
+process.on('unhandledRejection', (reason) => {
+  recordUnhandledRejection();
+  console.error('unhandledRejection:', reason);
+});
 
 const app = express();
+
 
 app.disable('x-powered-by');
 // Record metrics for all endpoints except /metrics itself
@@ -52,6 +67,8 @@ app.get('/version', (req, res) => {
 app.get('/status', (req, res) => {
   res.status(200).json(statusPayload());
 });
+
+
 
 // Visible dashboard
 app.get('/', (req, res) => {
