@@ -63,3 +63,15 @@ curl -s http://127.0.0.1:3000/health
 curl -s http://127.0.0.1:3000/metrics | grep -n "http_errors_total" | head
 curl -s http://127.0.0.1:3000/metrics | grep -n "process_exceptions_total" | head
 
+---
+
+## Phase 6.3 — Redis Uptime History + Polling
+
+### Objective
+Add uptime history storage and background health polling so prod-platform can monitor services over time.
+
+### Local Setup
+Start Redis (localhost-only):
+```bash
+docker run -d --name prod-platform-redis -p 127.0.0.1:6379:6379 redis:7-alpine
+docker exec -it prod-platform-redis redis-cli ping
