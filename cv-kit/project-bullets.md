@@ -40,4 +40,4 @@
 
 - Validated metrics in Dockerized production environment behind Nginx, maintaining HTTPS and reverse proxy integrity.
 
-- Built a Redis-backed uptime monitoring layer for a Node/Express platform, implementing background health polling and storing bounded uptime history (LPUSH/LTRIM) exposed via /services and /history/:service endpoints.
+- Built a Redis-backed uptime monitoring layer for a Node/Express platform, implementing background health polling and storing bounded uptime history (LPUSH/LTRIM) exposed via `/services` and `/history/:service` endpoints.
