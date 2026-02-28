@@ -9,6 +9,9 @@ const {
   recordUnhandledRejection
 } = require('./metrics');
 
+const { listServices, getUptimeHistory } = require('./uptimeStore');
+const { startPoller } = require('./poller');
+
 process.on('uncaughtException', (err) => {
   recordUncaughtException();
   console.error('uncaughtException:', err);
@@ -68,6 +71,28 @@ app.get('/status', (req, res) => {
   res.status(200).json(statusPayload());
 });
 
+app.get('/services', async (req, res) => {
+  try {
+    const services = await listServices();
+    res.json({ services });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to list services' });
+  }
+});
+
+app.get('/history/:service', async (req, res) => {
+  try {
+    const { service } = req.params;
+    const limit = req.query.limit || 200;
+
+    const history = await getUptimeHistory(service, limit);
+    res.json({ service, count: history.length, history });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to load history' });
+  }
+});
 
 
 // Visible dashboard
@@ -138,12 +163,13 @@ function escapeHtml(str) {
     .replaceAll("'", '&#039;');
 }
 
-if (require.main === module) {
+if (require.main === module) {  
   app.listen(PORT, () => {
     console.log(`API running on http://localhost:${PORT}`);
     console.log(`env=${APP_ENV} version=${APP_VERSION}`);
+
+    startPoller();   // ✅ called here
   });
 }
 
 module.exports = app;
-
