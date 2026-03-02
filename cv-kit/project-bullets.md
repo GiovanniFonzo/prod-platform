@@ -41,3 +41,5 @@
 - Validated metrics in Dockerized production environment behind Nginx, maintaining HTTPS and reverse proxy integrity.
 
 - Built a Redis-backed uptime monitoring layer for a Node/Express platform, implementing background health polling and storing bounded uptime history (LPUSH/LTRIM) exposed via `/services` and `/history/:service` endpoints.
+
+- Engineered a containerized uptime monitoring subsystem using Redis for persistent state, implementing scheduled health checks, latency capture, and secure internal networking within a Dockerized AWS EC2 deployment.
