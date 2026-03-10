@@ -12,6 +12,8 @@ const {
 const { listServices, getUptimeHistory } = require('./uptimeStore');
 const { startPoller } = require('./poller');
 
+const { getAnalytics } = require('./analytics');
+
 process.on('uncaughtException', (err) => {
   recordUncaughtException();
   console.error('uncaughtException:', err);
@@ -94,6 +96,27 @@ app.get('/history/:service', async (req, res) => {
   }
 });
 
+app.get('/analytics', async (req, res) => {
+  try {
+    const service = req.query.service;
+    const window = req.query.window || '24h';
+
+    if (!service) {
+      const services = await listServices();
+      return res.status(400).json({
+        ok: false,
+        error: 'Missing required query parameter: service',
+        available_services: services
+      });
+    }
+
+    const data = await getAnalytics(service, window);
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error('analytics error:', err);
+    return res.status(500).json({ ok: false, error: 'Failed to compute analytics' });
+  }
+});
 
 // Visible dashboard
 app.get('/', (req, res) => {
