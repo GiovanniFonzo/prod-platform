@@ -75,3 +75,10 @@ Start Redis (localhost-only):
 ```bash
 docker run -d --name prod-platform-redis -p 127.0.0.1:6379:6379 redis:7-alpine
 docker exec -it prod-platform-redis redis-cli ping
+
+## Verify uptime analytics locally
+
+Ensure the stack is running:
+
+```bash
+docker compose up --build
