@@ -45,3 +45,5 @@
 - Engineered a containerized uptime monitoring subsystem using Redis for persistent state, implementing scheduled health checks, latency capture, and secure internal networking within a Dockerized AWS EC2 deployment.
 
 - Built an uptime analytics API over historical polling data, exposing rolling service availability, failure counts, and average latency metrics derived from Redis-backed monitoring history.
+
+- Implemented a browser-based monitoring dashboard served from the Node.js API, exposing service health data through `/services`, `/analytics`, and `/history` endpoints to visualize uptime, latency, and recent checks.
