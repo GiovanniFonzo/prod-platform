@@ -10,4 +10,20 @@ services:
     environment:
       APP_ENV: docker-compose
       APP_VERSION: 0.1.0
+      REDIS_URL: redis://redis:6379
+      POLL_INTERVAL_SECONDS: "30"
+      UPTIME_TARGETS: "http://api:3000/health"
+    depends_on:
+      - redis
 
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    expose:
+      - "6379"
+
+volumes:
+  redis_data:

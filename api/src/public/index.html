@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prod-Platform Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+
+<header>
+  <h1>Prod-Platform Monitoring Dashboard</h1>
+  <p>Service health and uptime overview</p>
+</header>
+
+<section class="stats">
+
+  <div class="card">
+    <h3>Services</h3>
+    <p id="services-count">--</p>
+  </div>
+
+  <div class="card">
+    <h3>Uptime %</h3>
+    <p id="uptime-percent">--</p>
+  </div>
+
+  <div class="card">
+    <h3>Avg Latency</h3>
+    <p id="avg-latency">--</p>
+  </div>
+
+  <div class="card">
+    <h3>Failures</h3>
+    <p id="failure-count">--</p>
+  </div>
+
+</section>
+
+
+<section>
+
+<h2>Services</h2>
+
+<table id="services-table">
+
+<thead>
+<tr>
+<th>Service</th>
+<th>Target</th>
+<th>Status</th>
+<th>Uptime</th>
+<th>Latency</th>
+<th>Last Check</th>
+</tr>
+</thead>
+
+<tbody>
+</tbody>
+
+</table>
+
+</section>
+
+
+<section>
+
+<h2>Recent Checks</h2>
+
+<table id="checks-table">
+
+<thead>
+<tr>
+<th>Time</th>
+<th>Service</th>
+<th>Result</th>
+<th>Latency</th>
+</tr>
+</thead>
+
+<tbody>
+</tbody>
+
+</table>
+
+</section>
+
+<script src="/app.js"></script>
+
+</body>
+</html>
