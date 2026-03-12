@@ -21,19 +21,21 @@ A browser dashboard visualizes service health and uptime metrics.
 
 ## Architecture
 
-Browser  
-↓  
-Dashboard UI  
-↓  
-Node.js API  
-↓  
-Redis uptime store  
-↓  
-Background poller  
+```
+Browser
+   ↓
+Dashboard UI
+   ↓
+Node.js API
+   ↓
+Redis uptime store
+   ↓
+Background poller
 
-Infrastructure:
+Infrastructure
 
 Nginx → Docker → Node API + Redis → AWS EC2
+```
 
 ---
 
