@@ -1,34 +1,195 @@
-# prod-platform
+# Prod-Platform
 
-Production-oriented Node.js monitoring platform demonstrating REST APIs, Prometheus-style metrics, Redis-backed uptime polling, Docker deployment, and AWS EC2 infrastructure.
+Production-oriented monitoring platform built with Node.js, Redis, and Docker.  
+The system demonstrates service observability, uptime monitoring, analytics, and a browser dashboard deployed on AWS EC2 behind Nginx.
+
+---
+
+## Overview
+
+Prod-Platform monitors services by periodically polling configured targets and recording:
+
+- success / failure status
+- latency
+- timestamps
+
+The system stores uptime history in Redis and exposes analytics through REST endpoints.
+
+A browser dashboard visualizes service health and uptime metrics.
+
+---
+
+## Architecture
+
+Browser  
+↓  
+Dashboard UI  
+↓  
+Node.js API  
+↓  
+Redis uptime store  
+↓  
+Background poller  
+
+Infrastructure:
+
+Nginx → Docker → Node API + Redis → AWS EC2
 
 ---
 
 ## Features
 
 ### Core API
-- Status dashboard at `/`
+
+- Status dashboard: `/`
 - Health endpoint: `/health`
 - Version endpoint: `/version`
 - Runtime metadata: `/status`
 
-### Observability
-- Prometheus metrics endpoint: `/metrics`
-- HTTP request + latency metrics (excluding `/metrics`)
-- 5xx error instrumentation
-- Process exception tracking (`uncaughtException`, `unhandledRejection`)
+---
 
-### Uptime Monitoring (Phase 6.3)
-- Polling of configured targets on an interval
-- Redis-backed storage for current uptime state + last check timestamp
-- Latency capture per target
-- Redis runs internal-only (not exposed publicly)
+### Observability
+
+- Prometheus-style metrics endpoint: `/metrics`
+- HTTP request + latency metrics
+- 5xx error instrumentation
+- Process exception tracking
+
+Tracks:
+
+- `uncaughtException`
+- `unhandledRejection`
 
 ---
 
-## Local development
+### Uptime Monitoring
+
+Background poller checks configured targets and records:
+
+- success / failure
+- latency
+- timestamp
+
+Data is stored in Redis.
+
+Endpoints:
+
+```
+/services
+/history/:service
+/analytics?service=<name>
+```
+
+---
+
+### Dashboard
+
+Browser dashboard displays:
+
+- service list
+- uptime percentage
+- latency
+- recent checks
+
+Access locally:
+
+```
+http://localhost:3000
+```
+
+---
+
+## Tech Stack
+
+Backend
+
+- Node.js
+- Express
+- Redis
+
+Infrastructure
+
+- Docker
+- Docker Compose
+- Nginx
+- AWS EC2
+
+Observability
+
+- Prometheus-style metrics (`prom-client`)
+
+Frontend
+
+- HTML
+- CSS
+- Vanilla JavaScript
+
+---
+
+## Running Locally
+
+Start the stack:
 
 ```bash
-cd api
-npm install
-npm run dev
+docker compose up --build
+```
+
+Open the dashboard:
+
+```
+http://localhost:3000
+```
+
+---
+
+## API Endpoints
+
+Health:
+
+```
+GET /health
+```
+
+Status:
+
+```
+GET /status
+```
+
+Metrics:
+
+```
+GET /metrics
+```
+
+Services:
+
+```
+GET /services
+```
+
+History:
+
+```
+GET /history/:service
+```
+
+Analytics:
+
+```
+GET /analytics?service=<name>
+```
+
+---
+
+## Project Goals
+
+This project demonstrates:
+
+- building production-style APIs
+- observability and metrics instrumentation
+- uptime monitoring systems
+- Redis-backed data persistence
+- containerized deployments
+- cloud hosting with reverse proxy
+- operational documentation via runbooks
