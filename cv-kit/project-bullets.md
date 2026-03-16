@@ -46,6 +46,10 @@
 
 - Built an uptime analytics API over historical polling data, exposing rolling service availability, failure counts, and average latency metrics derived from Redis-backed monitoring history.
 
+---
+
+### Phase 7: Monitoring Dashboard
+
 - Implemented a browser-based monitoring dashboard served from the Node.js API, exposing service health data through `/services`, `/analytics`, and `/history` endpoints to visualize uptime, latency, and recent checks.
 
-- Connected a browser-based monitoring dashboard to live API data, rendering service health, uptime percentage, average latency, failure counts, and recent uptime checks from Redis-backed analytics endpoints.
+- Connected the dashboard UI to live monitoring data, rendering service uptime percentage, average latency, failure counts, and recent uptime checks retrieved from Redis-backed analytics endpoints.
