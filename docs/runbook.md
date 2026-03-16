@@ -173,3 +173,43 @@ The UI will consume these endpoints:
 These endpoints were implemented in **Phase 6 (Observability Platform)**.
 
 ---
+
+### Phase 7.1 Day 2 — Dashboard Data Integration
+
+Implemented client-side dashboard data loading in `api/src/public/app.js`.
+
+The dashboard now:
+
+- fetches `/services`
+- fetches `/analytics?service=<name>` for each service
+- fetches `/history/<service>?limit=10` for the first listed service
+- renders summary cards
+- renders the services table
+- renders recent checks
+
+### Payload alignment
+
+Confirmed API payloads:
+
+- `/services` returns `services`
+- `/analytics` returns `total_checks`, `successful_checks`, `failed_checks`, `uptime_percentage`, `average_latency_ms`, `latest_check_at`
+- `/history/:service` returns `history` items with `ts`, `ok`, `statusCode`, `latencyMs`, `url`
+
+### Validation
+
+Start the stack:
+
+```bash
+docker compose down
+docker compose up --build
+```
+
+Open:
+
+http://localhost:3000
+
+Expected result:
+
+- stats cards show live values
+- services table shows monitored services
+- recent checks table shows recent uptime results
