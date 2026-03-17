@@ -53,3 +53,5 @@
 - Implemented a browser-based monitoring dashboard served from the Node.js API, exposing service health data through `/services`, `/analytics`, and `/history` endpoints to visualize uptime, latency, and recent checks.
 
 - Connected the dashboard UI to live monitoring data, rendering service uptime percentage, average latency, failure counts, and recent uptime checks retrieved from Redis-backed analytics endpoints.
+
+- Enhanced the monitoring dashboard with visual status badges, latency-based highlighting, and automatic refresh to improve real-time operational visibility and product-style usability.

@@ -213,3 +213,17 @@ Expected result:
 - stats cards show live values
 - services table shows monitored services
 - recent checks table shows recent uptime results
+
+### Phase 7.2 — Dashboard Polish
+
+Improved the dashboard UI with visual monitoring cues and auto-refresh behavior.
+
+Changes:
+- added colored status badges for OK / DOWN / UNKNOWN states
+- added latency highlighting for fast / medium / slow response times
+- enabled automatic dashboard refresh every 30 seconds
+
+Validation:
+- dashboard refreshes without manual reload
+- status badges reflect service health state
+- latency values are visually differentiated by response time
