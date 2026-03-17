@@ -104,6 +104,16 @@ function renderOverview(services, analyticsList) {
   setText('failure-count', totalFailures);
 }
 
+function renderServiceDetail(serviceName, analytics) {
+  setText('detail-service', serviceName || '--');
+  setText('detail-total-checks', analytics?.total_checks ?? '--');
+  setText('detail-successful-checks', analytics?.successful_checks ?? '--');
+  setText('detail-failed-checks', analytics?.failed_checks ?? '--');
+  setText('detail-uptime', formatPercent(analytics?.uptime_percentage));
+  setText('detail-latency', formatLatency(analytics?.average_latency_ms));
+  setText('detail-last-check', formatTimestamp(analytics?.latest_check_at));
+}
+
 function renderServicesTable(services, analyticsByService) {
   const tbody = document.querySelector('#services-table tbody');
   tbody.innerHTML = '';
@@ -164,6 +174,14 @@ function renderError(message) {
   setText('avg-latency', 'ERR');
   setText('failure-count', 'ERR');
 
+  setText('detail-service', 'ERR');
+  setText('detail-total-checks', 'ERR');
+  setText('detail-successful-checks', 'ERR');
+  setText('detail-failed-checks', 'ERR');
+  setText('detail-uptime', 'ERR');
+  setText('detail-latency', 'ERR');
+  setText('detail-last-check', 'ERR');
+
   const servicesBody = document.querySelector('#services-table tbody');
   const checksBody = document.querySelector('#checks-table tbody');
 
@@ -214,6 +232,9 @@ async function loadDashboard() {
     renderServicesTable(services, analyticsByService);
 
     const firstService = services[0];
+    const firstAnalytics = analyticsByService[firstService];
+
+    renderServiceDetail(firstService, firstAnalytics);
 
     try {
       const historyResponse = await fetchJson(
