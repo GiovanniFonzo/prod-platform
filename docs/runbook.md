@@ -246,3 +246,18 @@ Validation:
 - dashboard overview cards still render
 - service detail section shows live analytics for the first listed service
 - recent checks continue to render below the detail section
+
+### Phase 7.4 — Latency Trend Chart
+
+Added a latency chart to the dashboard using recent service history.
+
+The dashboard now:
+- loads recent uptime history from `/history/<service>?limit=20`
+- plots latency values over time
+- refreshes the chart automatically with the dashboard refresh cycle
+
+Validation:
+- latency chart renders below the service detail section
+- chart points reflect recent `latencyMs` values from uptime history
+- chart updates on refresh without reloading the page manually
+- fixed chart rendering by disabling aspect ratio and applying explicit canvas sizing

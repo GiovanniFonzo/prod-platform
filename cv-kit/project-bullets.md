@@ -57,3 +57,5 @@
 - Enhanced the monitoring dashboard with visual status badges, latency-based highlighting, and automatic refresh to improve real-time operational visibility and product-style usability.
 
 - Added a service detail view to the monitoring dashboard, surfacing per-service uptime, success/failure counts, latency, and last-check metadata from live analytics endpoints.
+
+- Designed and implemented a real-time monitoring dashboard for a Node.js observability platform, visualizing service uptime, latency, failure rates, and historical checks using REST APIs and Redis-backed analytics, with auto-refresh, status indicators, and latency trend charts.
