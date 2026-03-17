@@ -77,3 +77,8 @@ h2 {
   color: #7f1d1d;
   font-weight: bold;
 }
+
+#latency-chart {
+  width: 100% !important;
+  height: 300px !important;
+}

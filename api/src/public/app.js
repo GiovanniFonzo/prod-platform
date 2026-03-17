@@ -1,3 +1,5 @@
+let latencyChart = null;
+
 async function fetchJson(url) {
   const response = await fetch(url);
 
@@ -34,6 +36,18 @@ function formatTimestamp(value) {
   }
 
   return date.toLocaleString();
+}
+
+function formatChartLabel(value) {
+  if (!value) return '--';
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toLocaleTimeString();
 }
 
 function getStatusLabel(analytics) {
@@ -168,6 +182,55 @@ function renderChecksTable(serviceName, historyItems) {
   }
 }
 
+function renderLatencyChart(historyItems) {
+  const canvas = document.getElementById('latency-chart');
+  if (!canvas || typeof Chart === 'undefined') {
+    return;
+  }
+
+  const chartItems = [...historyItems].reverse().slice(-20);
+  const labels = chartItems.map((item) => formatChartLabel(item.ts));
+  const values = chartItems.map((item) => Number(item.latencyMs || 0));
+
+  if (latencyChart) {
+    latencyChart.destroy();
+  }
+
+  latencyChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Latency (ms)',
+          data: values,
+          borderWidth: 2,
+          tension: 0.25
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Milliseconds'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Check Time'
+          }
+        }
+      }
+    }
+  });
+}
+
 function renderError(message) {
   setText('services-count', 'ERR');
   setText('uptime-percent', 'ERR');
@@ -196,6 +259,11 @@ function renderError(message) {
       <td colspan="4">${message}</td>
     </tr>
   `;
+
+  if (latencyChart) {
+    latencyChart.destroy();
+    latencyChart = null;
+  }
 }
 
 async function loadDashboard() {
@@ -238,17 +306,26 @@ async function loadDashboard() {
 
     try {
       const historyResponse = await fetchJson(
-        `/history/${encodeURIComponent(firstService)}?limit=10`
+        `/history/${encodeURIComponent(firstService)}?limit=20`
       );
-      renderChecksTable(firstService, historyResponse.history || []);
+      const historyItems = historyResponse.history || [];
+
+      renderChecksTable(firstService, historyItems);
+      renderLatencyChart(historyItems);
     } catch (error) {
       console.error(`Failed to load history for ${firstService}:`, error);
+
       const checksBody = document.querySelector('#checks-table tbody');
       checksBody.innerHTML = `
         <tr>
           <td colspan="4">Failed to load recent checks.</td>
         </tr>
       `;
+
+      if (latencyChart) {
+        latencyChart.destroy();
+        latencyChart = null;
+      }
     }
   } catch (error) {
     console.error('Dashboard load failed:', error);
