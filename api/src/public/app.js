@@ -48,6 +48,21 @@ function getStatusLabel(analytics) {
   return 'OK';
 }
 
+function getStatusClass(status) {
+  if (status === 'OK') return 'status status-ok';
+  if (status === 'DOWN') return 'status status-down';
+  return 'status status-unknown';
+}
+
+function getLatencyClass(latency) {
+  const value = Number(latency);
+
+  if (Number.isNaN(value)) return '';
+  if (value < 20) return 'latency-fast';
+  if (value < 50) return 'latency-medium';
+  return 'latency-slow';
+}
+
 function setText(id, value) {
   const element = document.getElementById(id);
   if (element) {
@@ -102,14 +117,15 @@ function renderServicesTable(services, analyticsByService) {
     const status = getStatusLabel(analytics);
     const uptime = formatPercent(analytics?.uptime_percentage);
     const latency = formatLatency(analytics?.average_latency_ms);
+    const latencyClass = getLatencyClass(analytics?.average_latency_ms);
     const lastCheck = formatTimestamp(analytics?.latest_check_at);
 
     row.innerHTML = `
       <td>${serviceName}</td>
       <td>${target}</td>
-      <td>${status}</td>
+      <td><span class="${getStatusClass(status)}">${status}</span></td>
       <td>${uptime}</td>
-      <td>${latency}</td>
+      <td class="${latencyClass}">${latency}</td>
       <td>${lastCheck}</td>
     `;
 
@@ -129,12 +145,13 @@ function renderChecksTable(serviceName, historyItems) {
     const timestamp = formatTimestamp(item.ts);
     const result = item.ok === true ? 'OK' : 'DOWN';
     const latency = formatLatency(item.latencyMs);
+    const latencyClass = getLatencyClass(item.latencyMs);
 
     row.innerHTML = `
       <td>${timestamp}</td>
       <td>${serviceName}</td>
-      <td>${result}</td>
-      <td>${latency}</td>
+      <td><span class="${getStatusClass(result)}">${result}</span></td>
+      <td class="${latencyClass}">${latency}</td>
     `;
 
     tbody.appendChild(row);
@@ -177,7 +194,9 @@ async function loadDashboard() {
     const analyticsEntries = await Promise.all(
       services.map(async (service) => {
         try {
-          const analytics = await fetchJson(`/analytics?service=${encodeURIComponent(service)}`);
+          const analytics = await fetchJson(
+            `/analytics?service=${encodeURIComponent(service)}`
+          );
           return [service, analytics];
         } catch (error) {
           console.error(`Failed to load analytics for ${service}:`, error);
@@ -197,7 +216,9 @@ async function loadDashboard() {
     const firstService = services[0];
 
     try {
-      const historyResponse = await fetchJson(`/history/${encodeURIComponent(firstService)}?limit=10`);
+      const historyResponse = await fetchJson(
+        `/history/${encodeURIComponent(firstService)}?limit=10`
+      );
       renderChecksTable(firstService, historyResponse.history || []);
     } catch (error) {
       console.error(`Failed to load history for ${firstService}:`, error);
@@ -215,3 +236,7 @@ async function loadDashboard() {
 }
 
 loadDashboard();
+
+setInterval(() => {
+  loadDashboard();
+}, 30000);

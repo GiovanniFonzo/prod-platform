@@ -39,4 +39,41 @@ h2 {
   margin-top: 40px;
 }
 
+/* Status badges */
+.status {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  display: inline-block;
+}
 
+.status-ok {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-down {
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+
+.status-unknown {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* Latency highlighting */
+.latency-fast {
+  color: #065f46;
+  font-weight: bold;
+}
+
+.latency-medium {
+  color: #92400e;
+  font-weight: bold;
+}
+
+.latency-slow {
+  color: #7f1d1d;
+  font-weight: bold;
+}
