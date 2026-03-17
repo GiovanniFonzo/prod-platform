@@ -280,3 +280,183 @@ Validation:
 - `/health` returns 200 locally and via public HTTPS
 - dashboard accessible on the public domain
 - service analytics and latency chart render in production
+
+## Deployment — Updating EC2 with Latest Code
+
+This procedure ensures the EC2 instance runs the latest version of the application from GitHub.
+
+---
+
+### When to use
+
+Run this whenever:
+
+- new features are pushed to GitHub
+- dashboard/UI changes are made
+- backend logic is updated
+- the running version on EC2 is outdated
+
+---
+
+### Step 1 — SSH into EC2
+
+```bash
+ssh ec2-user@<EC2_PUBLIC_IP>
+```
+
+---
+
+### Step 2 — Navigate to project
+
+```bash
+cd ~/prod-platform
+```
+
+---
+
+### Step 3 — Sync with GitHub (force clean state)
+
+```bash
+git fetch origin
+git reset --hard origin/main
+git clean -fd
+```
+
+This ensures:
+- no merge conflicts
+- no leftover local files
+- EC2 matches GitHub exactly
+
+---
+
+### Step 4 — Rebuild Docker image (IMPORTANT)
+
+```bash
+docker build --no-cache -t prod-platform-api:local ./api
+```
+
+Why:
+- ensures new code is included
+- avoids stale cached layers
+
+---
+
+### Step 5 — Restart services
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+---
+
+### Step 6 — Verify containers
+
+```bash
+docker ps
+```
+
+Expected:
+- API container running
+- Redis container running
+
+---
+
+### Step 7 — Verify API locally
+
+```bash
+curl -s http://127.0.0.1:3000/health
+```
+
+Expected:
+
+```json
+{"ok":true}
+```
+
+---
+
+### Step 8 — Verify public endpoint
+
+```bash
+curl -I https://api.thatsnap.com/health
+```
+
+Expected:
+
+```text
+HTTP/1.1 200 OK
+```
+
+---
+
+### Step 9 — Verify dashboard in browser
+
+Open:
+
+https://api.thatsnap.com
+
+Then perform a hard refresh:
+
+- Mac: Cmd + Shift + R
+- Windows: Ctrl + Shift + R
+
+Expected:
+- updated dashboard UI
+- charts visible
+- no old "Refresh button" page
+
+---
+
+### Troubleshooting
+
+#### Issue: Old dashboard still visible
+
+Fix:
+```bash
+docker build --no-cache -t prod-platform-api:local ./api
+docker compose down
+docker compose up -d
+```
+
+Then hard refresh browser.
+
+---
+
+#### Issue: 502 Bad Gateway
+
+Cause:
+- API container not running
+
+Fix:
+```bash
+docker ps
+docker logs prod-platform-api-1
+```
+
+Then restart:
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+---
+
+#### Issue: Git pull conflicts
+
+Fix:
+```bash
+git fetch origin
+git reset --hard origin/main
+git clean -fd
+```
+
+---
+
+### Notes
+
+- EC2 is a deployment environment only
+- Never commit code from EC2
+- GitHub is the source of truth
+- Always rebuild the Docker image when deploying changes
