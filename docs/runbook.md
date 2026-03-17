@@ -227,3 +227,22 @@ Validation:
 - dashboard refreshes without manual reload
 - status badges reflect service health state
 - latency values are visually differentiated by response time
+
+### Phase 7.3 — Service Detail View
+
+Added a service detail section to the dashboard for the selected service.
+
+The dashboard now displays:
+
+- service name
+- total checks
+- successful checks
+- failed checks
+- uptime percentage
+- average latency
+- latest check timestamp
+
+Validation:
+- dashboard overview cards still render
+- service detail section shows live analytics for the first listed service
+- recent checks continue to render below the detail section

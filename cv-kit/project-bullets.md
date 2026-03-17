@@ -55,3 +55,5 @@
 - Connected the dashboard UI to live monitoring data, rendering service uptime percentage, average latency, failure counts, and recent uptime checks retrieved from Redis-backed analytics endpoints.
 
 - Enhanced the monitoring dashboard with visual status badges, latency-based highlighting, and automatic refresh to improve real-time operational visibility and product-style usability.
+
+- Added a service detail view to the monitoring dashboard, surfacing per-service uptime, success/failure counts, latency, and last-check metadata from live analytics endpoints.
