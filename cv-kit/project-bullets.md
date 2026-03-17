@@ -59,3 +59,7 @@
 - Added a service detail view to the monitoring dashboard, surfacing per-service uptime, success/failure counts, latency, and last-check metadata from live analytics endpoints.
 
 - Designed and implemented a real-time monitoring dashboard for a Node.js observability platform, visualizing service uptime, latency, failure rates, and historical checks using REST APIs and Redis-backed analytics, with auto-refresh, status indicators, and latency trend charts.
+
+- Designed and deployed a production-style real-time monitoring dashboard for a Node.js observability platform, visualizing service uptime, latency, failure rates, and historical checks using REST APIs and Redis-backed analytics, with auto-refresh, status indicators, service detail views, and trend charts.
+
+- Deployed the monitoring platform to AWS EC2 behind Nginx with Dockerized services and HTTPS, validating live dashboard access and production health endpoints on a public domain.

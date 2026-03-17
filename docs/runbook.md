@@ -261,3 +261,22 @@ Validation:
 - chart points reflect recent `latencyMs` values from uptime history
 - chart updates on refresh without reloading the page manually
 - fixed chart rendering by disabling aspect ratio and applying explicit canvas sizing
+
+## Phase 7.5 — Final Deployment
+
+Deployed the full monitoring platform, including the dashboard UI, to EC2.
+
+Steps:
+- aligned the EC2 repository with `origin/main`
+- rebuilt the API image manually with Docker
+- restarted the Docker Compose stack
+- verified local API health on `127.0.0.1:3000`
+- verified public HTTPS access through Nginx
+- confirmed the dashboard rendered correctly on the public domain
+
+Validation:
+- API container running on port 3000
+- Redis container running
+- `/health` returns 200 locally and via public HTTPS
+- dashboard accessible on the public domain
+- service analytics and latency chart render in production
