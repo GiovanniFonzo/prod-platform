@@ -460,3 +460,230 @@ git clean -fd
 - Never commit code from EC2
 - GitHub is the source of truth
 - Always rebuild the Docker image when deploying changes
+
+
+## Monitoring External Applications: Flask Blogging App Integration
+
+`prod-platform` can monitor external or standalone applications by polling their health-check endpoints.
+
+As part of the portfolio integration milestone, the completed Flask Blogging App was connected to `prod-platform` as a monitored service.
+
+## Monitoring External Applications: Flask Blogging App Integration
+
+`prod-platform` can monitor external or standalone applications by polling their health-check endpoints.
+
+As part of this integration milestone, the completed Flask Blogging App was connected to `prod-platform` as a monitored service.
+
+This proves that `prod-platform` can monitor a real application, not only itself.
+
+---
+
+### Monitored Application
+
+| Item | Value |
+|---|---|
+| Service name | `flask-blogging-app` |
+| Application stack | Flask, SQLAlchemy, PostgreSQL, Tkinter frontend |
+| Flask health endpoint | `/health` |
+| Local host URL | `http://127.0.0.1:5050/health` |
+| Docker container URL | `http://host.docker.internal:5050/health` |
+| Monitoring platform | `prod-platform` |
+| Monitoring storage | Redis |
+| Polling interval | 30 seconds |
+
+---
+
+### Flask Health Endpoint
+
+The Flask Blogging App exposes a health-check endpoint.
+
+Run this from the host machine:
+
+```bash
+curl http://127.0.0.1:5050/health
+```
+
+Expected response:
+
+```json
+{
+  "database": "postgresql",
+  "service": "flask-blogging-app",
+  "status": "ok"
+}
+```
+
+---
+
+### prod-platform Service Configuration
+
+The monitored services are configured in:
+
+```text
+api/src/services.js
+```
+
+Current service configuration:
+
+```js
+const SERVICES = [
+  {
+    name: 'prod-platform',
+    url: process.env.SELF_URL || 'http://api:3000/health',
+  },
+  {
+    name: 'flask-blogging-app',
+    url: process.env.FLASK_BLOGGING_APP_URL || 'http://host.docker.internal:5050/health',
+  },
+];
+
+module.exports = { SERVICES };
+```
+
+---
+
+### Docker Compose Environment Variables
+
+The local Docker configuration is defined in:
+
+```text
+docker-compose.yml
+```
+
+Environment block:
+
+```yaml
+environment:
+  APP_ENV: docker-compose
+  APP_VERSION: 0.1.0
+  REDIS_URL: redis://redis:6379
+  POLL_INTERVAL_SECONDS: "30"
+  SELF_URL: "http://api:3000/health"
+  FLASK_BLOGGING_APP_URL: "http://host.docker.internal:5050/health"
+```
+
+---
+
+### Local Run Order
+
+Start the Flask Blogging App first.
+
+```bash
+cd ~/Projects/blogging-app
+source venv/bin/activate
+python backend.py
+```
+
+Confirm that Flask is running on port `5050`:
+
+```bash
+curl http://127.0.0.1:5050/health
+```
+
+Then start `prod-platform`:
+
+```bash
+cd ~/Projects/prod-platform
+docker compose down
+docker compose up --build --force-recreate
+```
+
+Expected startup log:
+
+```text
+Poller started: 2 service(s), interval=30000ms
+```
+
+This confirms that both services are detected:
+
+```text
+prod-platform
+flask-blogging-app
+```
+
+---
+
+### Validation Commands
+
+Check the configured services:
+
+```bash
+curl http://localhost:3000/services
+```
+
+Check Flask Blogging App history:
+
+```bash
+curl "http://localhost:3000/history/flask-blogging-app?limit=5"
+```
+
+Example successful history response:
+
+```json
+{
+  "service": "flask-blogging-app",
+  "count": 2,
+  "history": [
+    {
+      "ts": "2026-05-09T15:48:08.951Z",
+      "ok": true,
+      "statusCode": 200,
+      "latencyMs": 34,
+      "url": "http://host.docker.internal:5050/health"
+    }
+  ]
+}
+```
+
+Check Flask Blogging App analytics:
+
+```bash
+curl "http://localhost:3000/analytics?service=flask-blogging-app"
+```
+
+Example analytics response:
+
+```json
+{
+  "service": "flask-blogging-app",
+  "window": "24h",
+  "total_checks": 3,
+  "successful_checks": 3,
+  "failed_checks": 0,
+  "uptime_percentage": 100,
+  "average_latency_ms": 74,
+  "latest_check_at": "2026-05-09T15:48:38.977Z"
+}
+```
+
+---
+
+### Troubleshooting
+
+| Problem | Likely Cause | Fix |
+|---|---|---|
+| `Poller started: 1 service(s)` | `api/src/services.js` only contains one service | Add `flask-blogging-app` to the `SERVICES` array |
+| Docker Compose YAML error | Incorrect indentation or mixed environment syntax | Use key/value format under `environment:` |
+| Flask service shows failed checks | Flask app is not running | Start Flask with `python backend.py` |
+| Container cannot reach Flask | Wrong URL used from Docker | Use `http://host.docker.internal:5050/health` |
+| Local curl works but Docker check fails | Docker-to-host networking issue | Confirm `FLASK_BLOGGING_APP_URL` is set correctly |
+
+---
+
+### Purpose of This Integration
+
+This integration demonstrates that `prod-platform` can monitor real standalone applications through health-check endpoints.
+
+It shows:
+
+- cross-application observability
+- health-check based monitoring
+- uptime history
+- response latency tracking
+- Redis-backed analytics
+- Docker-to-host service monitoring
+- portfolio-level integration between separate projects
+
+The Flask Blogging App remains a separate application, while `prod-platform` acts as the monitoring and observability layer.
+
+
