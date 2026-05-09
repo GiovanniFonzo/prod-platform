@@ -2,9 +2,7 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: Dockerfile
     image: prod-platform-api:local
-    restart: unless-stopped
     ports:
       - "127.0.0.1:3000:3000"
     environment:
@@ -12,7 +10,8 @@ services:
       APP_VERSION: 0.1.0
       REDIS_URL: redis://redis:6379
       POLL_INTERVAL_SECONDS: "30"
-      UPTIME_TARGETS: "http://api:3000/health"
+      SELF_URL: "http://api:3000/health"
+      FLASK_BLOGGING_APP_URL: "http://host.docker.internal:5050/health"
     depends_on:
       - redis
 
